@@ -10,3 +10,11 @@ function fillChartData(chartId, data)
 	test = test.toString()
 	chartElement.innerHTML = test;
 }
+
+function createChart(chartId)
+{
+	var chartElement = document.createElement('div');
+	chartElement.id = chartId;
+	chartElement.innerHTML = '<img class="chart" src="images/chartPlaceholder.jpeg">';
+	return chartElement;
+}

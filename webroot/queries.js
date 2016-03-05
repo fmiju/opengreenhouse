@@ -1,7 +1,25 @@
+function Initialize()
+{
+	UpdateSensorsList();
+}
+
 function queryData(name, start, end, resolution, callback)
 {
 	var command = "rpc/sensor/?name="+name+"&start="+start+"&end="+end+"&resolution="+resolution;
-	SendToServer(g_ServerURL, command, "", callback)
+
+	var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", g_ServerURL+'/'+command, true);
+    xmlHttp.send("");	
+	xmlHttp.onreadystatechange = function(e) 
+	{
+		if ( xmlHttp.readyState === 4 ) 
+		{		
+			if(callback)
+				callback(xmlHttp.responseText, xmlHttp.status);
+		}		
+	}
+    return xmlHttp.responseText;
 }
 
 function runQuery()
@@ -22,16 +40,73 @@ function runQuery()
 	inputField = document.getElementById("timeResolution");
 	if(inputField != undefined)
 		timeResolution = inputField.value;
-	if(name=="temp")
-		queryData(name, timeStart, timeEnd, timeResolution, 
-		function(data){ fillChartData("temperatureChart", data) });
-	if(name=="airHumidity")
-		queryData(name, timeStart, timeEnd, timeResolution, 
-		function(data){ fillChartData("airHumidityChart", data) });
-	if(name=="soilHumidity")
-		queryData(name, timeStart, timeEnd, timeResolution, 
-		function(data){ fillChartData("soilHumidityChart", data) });
-	if(name=="wind")
-		queryData(name, timeStart, timeEnd, timeResolution, 
-		function(data){ fillChartData("windChart", data) });
+
+	var sensorCombobox = document.getElementById("sensorName");
+	if(sensorCombobox == undefined)
+	{
+		alert("sensors combobox not found");
+		return;
+	}
+	name = sensorCombobox.value;
+	for(var index in gSensorsList)
+	{
+		if( gSensorsList[index].name == name)
+		{
+			queryData(gSensorsList[index].name, timeStart, timeEnd, timeResolution, 
+				function(data){ fillChartData(gSensorsList[index].chartId, data) });
+			break;
+		}
+	}
+}
+
+//sensors name, description, chartId
+var gSensorsList = []
+
+function UpdateSensorsList()
+{
+	var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "GET", g_ServerURL+'/rpc/sensor_list', true);
+    xmlHttp.send(" ");	
+	xmlHttp.onreadystatechange = function(e) 
+	{
+		if ( xmlHttp.readyState === 4 ) 
+		{		
+			var sensorCombobox = document.getElementById("sensorName");
+			if(sensorCombobox == undefined)
+				return;
+
+			var plotsContainer = document.getElementById("plotsContainer");
+			if(plotsContainer == undefined)
+				return;
+
+			plotsContainer.innerHTML = ""; //delete all charts
+
+			sensorCombobox.innerHTML = ""; //delete all sensor options
+			gSensorsList.length = 0;
+
+			var obj = JSON.parse(xmlHttp.responseText);
+			if(obj.ok != true)
+				alert("Get sensors list failed");
+			for(var itemKey in obj.value)
+			{
+				var item = obj.value[itemKey];
+				for(var key in item)
+				{
+					var sensorStruct = new Object();
+					sensorStruct.name = key;
+					sensorStruct.description = item[key];
+					sensorStruct.chartId = key+"Chart";
+					gSensorsList.push(sensorStruct);
+					var option = document.createElement("option");
+					option.text = item[key];
+					option.value = key;
+					sensorCombobox.add(option);
+					var chartElement = createChart(sensorStruct.chartId);
+					plotsContainer.appendChild(chartElement);
+				}
+			}
+		}		
+	}
+    return xmlHttp.responseText;
 }
