@@ -4,8 +4,56 @@ import http.server
 import json
 import urllib.parse
 import numpy
+import multiprocessing
+import serial
+
+
+SERIAL_DEVICE = "/dev/ttyACM0"
+SERIAL_RATE = 115200
+HTTP_HOST = '127.0.0.1'
+HTTP_PORT = 8000
+
+
+class Arduino:
+    def __init__(self):
+        self.pipe = None
+
+    def parse_status(self, line):
+        line = line.decode('ascii')
+        status = self.last_status.copy()
+        for kv in line.strip().split(','):
+            yield kv.split(':', 1)
+
+    def interact(self, pipe):
+        serial = serial.Serial(SERIAL_DEVICE, SERIAL_RATE)
+        while True:
+            try:
+                while self.pipe.poll():
+                    cmd = self.pipe.recv()
+                    line = ' '.join(str(x) for x in cmd)
+                    serial.write(line.encode('ascii'))
+            except Empty:
+                pass
+            line = self.serial.readline()
+            for x in self.parse_status(line):
+                self.pipe.send(x)
+
+    def start(self):
+        self.pipe, child_conn = multiprocessing.Pipe()
+        multiprocessing.Process(target=self.interact, args=(child_conn,))
+
+    def command(name, *args):
+        assert(self.pipe)
+        self.pipe.send((name,) + args)
+
+
 
 WEBROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "webroot")
+
+def sensor_list():
+    return [{
+        'temperature': 'Random temperature'
+    }]
 
 def sensor(name, start, end, resolution=1):
     start = float(start)
@@ -19,6 +67,8 @@ def sensor(name, start, end, resolution=1):
     }
 
 PROCEDURES = dict(sensor=sensor)
+
+ARDUINO = Arduino()
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def respond(self, code, value):
@@ -59,8 +109,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
 def main():
     os.chdir(WEBROOT)
-    httpd = http.server.HTTPServer(("", 8000), Handler)
+    httpd = http.server.HTTPServer((HTTP_HOST, HTTP_PORT), Handler)
     print("Serving on http://0.0.0.0:8000")
+    #ARDUINO.start()
     httpd.serve_forever()
 
 
