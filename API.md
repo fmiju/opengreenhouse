@@ -1,5 +1,7 @@
 # API
 
+## Formatas
+
 Jei ok, grąžina HTTP 200 ir JSON:
 
     {"ok": true, "value": ...}
@@ -12,7 +14,8 @@ URL formatas:
 
     /rpc/sensor/?name=temp&start=1&end=10&resolution=1
 
-RPC procedūrų sąrašas:
+## Procedūros
 
-    def sensor\_list():
-    def sensor(name, start, end, resolution=1):
+    sensor_list()
+
+    sensor(name, start, end, resolution=1)
