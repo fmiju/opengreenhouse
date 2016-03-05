@@ -52,7 +52,7 @@ WEBROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "webroot")
 
 def sensor_list():
     return [{
-        'temperature': 'Random temperature'
+        'temp': 'Random temperature'
     }]
 
 def sensor(name, start, end, resolution=1):
@@ -66,7 +66,7 @@ def sensor(name, start, end, resolution=1):
         'value': list(numpy.random.normal(size=len(time))),
     }
 
-PROCEDURES = dict(sensor=sensor)
+PROCEDURES = dict(sensor=sensor, sensor_list=sensor_list)
 
 ARDUINO = Arduino()
 
