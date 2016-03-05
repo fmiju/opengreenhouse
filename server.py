@@ -11,8 +11,8 @@ from threading import Thread
 from queue import Queue, Empty
 
 
-SERIAL_DEVICE = "/dev/ttyUSB0"
-SERIAL_RATE = 9600
+SERIAL_DEVICE = "/dev/ttyUSB1"
+SERIAL_RATE = 112500
 HTTP_HOST = '127.0.0.1'
 HTTP_PORT = 8000
 
@@ -41,13 +41,12 @@ class Arduino:
             try:
                 while True:
                     cmd = self.sendq.get(block=False)
-                    print("DEBUG COMMAND:", cmd)
                     serial.write(cmd.encode('ascii'))
                     serial.write(b'\n')
             except Empty:
                 pass
-            key, value = serial.readline().decode('ascii').strip().split(' ')
-            print(key, value)
+            line = serial.readline()
+            key, value = line.decode('ascii').strip().split(' ')
             #key, value = 'temp 18'.split(' ')
             value = int(value)
             self.log_value(key, value)
