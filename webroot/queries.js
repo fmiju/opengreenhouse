@@ -23,7 +23,7 @@ function queryData(name, start, end, resolution, callback)
 }
 
 function runQuery()
-{
+{	
 	var name;
 	var timeStart = 0;
 	var timeEnd = 0;
@@ -83,7 +83,7 @@ function UpdateSensorsList()
 			if(sensorCombobox == undefined)
 				return;
 
-			var plotsContainer = document.getElementById("plotsContainer");
+			var plotsContainer = document.getElementById("Content");
 			if(plotsContainer == undefined)
 				return;
 
@@ -91,8 +91,12 @@ function UpdateSensorsList()
 			if(widgetsContainer == undefined)
 				return;
 
-			plotsContainer.innerHTML = ""; //delete all charts
-
+			for(var sensor in gSensorsList)
+			{
+				var element = document.getElementById(gSensorsList[sensor].chartId);
+				plotsContainer.removeChild(element);
+			}
+			
 			sensorCombobox.innerHTML = ""; //delete all sensor options
 			gSensorsList.length = 0;
 
