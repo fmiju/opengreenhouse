@@ -53,7 +53,14 @@ function runQuery()
 		if( gSensorsList[index].name == name)
 		{
 			queryData(gSensorsList[index].name, timeStart, timeEnd, timeResolution, 
-				function(data){ fillChartData(gSensorsList[index].chartId, data) });
+				function(data){ fillChartData(gSensorsList[index].chartId, data) 
+			
+				values = JSON.parse(data);
+				numbers = values.value.value;
+				var lastValue = numbers[numbers.length-1];
+				setWidgetValue("tempWidget", lastValue)
+				
+				});			
 			break;
 		}
 	}
@@ -124,4 +131,27 @@ function UpdateSensorsList()
 		}		
 	}
     return xmlHttp.responseText;
+}
+
+function continuousUpdate()
+{
+	var name;
+	var timeEnd = Date.now();
+	var timeStart = timeEnd-1;
+	var timeResolution = 1;
+	for(var index in gSensorsList)
+	{
+		queryData(gSensorsList[index].name, timeStart, timeEnd, timeResolution, 
+			function(data){ 
+
+			fillChartData(gSensorsList[index].chartId, data) 
+		
+			values = JSON.parse(data);
+			numbers = values.value.value;
+			var lastValue = numbers[numbers.length-1];
+			setWidgetValue("tempWidget", lastValue)
+			
+			});
+	}
+	setTimeout(continuousUpdate, 500);
 }
