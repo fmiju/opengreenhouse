@@ -75,10 +75,10 @@ function UpdateSensorsList()
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open( "GET", g_ServerURL+'/rpc/sensor_list', true);
     xmlHttp.send(" ");	
-	xmlHttp.onreadystatechange = function(e) 
-	{
-		if ( xmlHttp.readyState === 4 ) 
-		{		
+	// xmlHttp.onreadystatechange = function(e) 
+	// {
+	// 	if ( xmlHttp.readyState === 4 ) 
+	// 	{		
 			var sensorCombobox = document.getElementById("sensorName");
 			if(sensorCombobox == undefined)
 				return;
@@ -100,12 +100,16 @@ function UpdateSensorsList()
 			sensorCombobox.innerHTML = ""; //delete all sensor options
 			gSensorsList.length = 0;
 
-			if(xmlHttp.responseText.length == 0)
-			{
-				return;
-			}
+			var temp = '{"ok": true,"value": [{"temp": "Random temperature"},{"airHumidity":"Air humidity"}]}';
+			xmlHttp.responseText = temp;
 
-			var obj = JSON.parse(xmlHttp.responseText);
+
+			// if(xmlHttp.responseText.length == 0)
+			// {
+			// 	return;
+			// }
+
+			var obj = JSON.parse(temp);
 			if(obj.ok != true)
 			{
 				alert("Get sensors list failed");
@@ -132,8 +136,8 @@ function UpdateSensorsList()
 					widgetsContainer.appendChild(widget);
 				}
 			}
-		}		
-	}
+	// 	}		
+	// }
     return xmlHttp.responseText;
 }
 
