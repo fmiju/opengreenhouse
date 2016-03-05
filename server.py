@@ -11,8 +11,8 @@ from threading import Thread
 from queue import Queue, Empty
 
 
-SERIAL_DEVICE = "/dev/ttyACM0"
-SERIAL_RATE = 115200
+SERIAL_DEVICE = "/dev/ttyUSB0"
+SERIAL_RATE = 9600
 HTTP_HOST = '127.0.0.1'
 HTTP_PORT = 8000
 
@@ -36,23 +36,23 @@ class Arduino:
             f.write("{} {}\n".format(time.time(), value))
 
     def interact(self):
-        #serial = Serial(SERIAL_DEVICE, SERIAL_RATE)
-        with open("log", "a") as log:
-            while True:
-                try:
-                    while True:
-                        cmd = self.sendq.get(block=False)
-                        #serial.write(cmd.encode('ascii'))
-                        print("DEBUG COMMAND:", cmd)
-                except Empty:
-                    pass
-                #key, value = serial.readline().split(' ')
-                key, value = 'temp 18'.split(' ')
-                value = int(value)
-                self.log_value(key, value)
-                self.state[key] = value
-                self.recvq.put((key, value))
-                time.sleep(1)
+        serial = Serial(SERIAL_DEVICE, SERIAL_RATE)
+        while True:
+            try:
+                while True:
+                    cmd = self.sendq.get(block=False)
+                    print("DEBUG COMMAND:", cmd)
+                    serial.write(cmd.encode('ascii'))
+                    serial.write(b'\n')
+            except Empty:
+                pass
+            key, value = serial.readline().decode('ascii').strip().split(' ')
+            print(key, value)
+            #key, value = 'temp 18'.split(' ')
+            value = int(value)
+            self.log_value(key, value)
+            self.state[key] = value
+            self.recvq.put((key, value))
 
     def start(self):
         self.thread.start()

@@ -29,5 +29,14 @@ _<ts>_ – UNIX timestampai. _resolution_ nurodyti nebūtina (default: 1).
 
 ## Parametrai
 
+### Skaitymui
+
 * _temp_ – oro temperatūra, laipsniais C.
 * _humidity_ – dirvos drėgnumas, abstrakčiais vienetais.
+* _wind_ – vėjo greitis, enkoderio tikais per sekundę (600 per apsisukimą)
+
+### Rašymui ir skaitymui
+
+* _window_ – lango pozicija, steperio žingsniais
+* _pump_ – kiek laiko liko laistyti (kai rašoma, nustato tą laiką ir įjungia
+  pompą)
