@@ -2,6 +2,7 @@
 #include <Wire.h>
 #include <Encoder.h>
 #include <TimerOne.h>
+#include <SerialCommand.h>
 
 //int anemometer_length = 
 const int led = LED_BUILTIN;
@@ -9,13 +10,15 @@ int winDirPin = 4;
 int winStepPin = 5;
 int doorDirPin = 6;
 int doorStepPin = 7;
-int timerPeriod = 150000; // microseconds
-int millisbetweenSteps = 10; // milliseconds
-volatile int windowDelta = 100000;
+int pumpPin = 9;
+int timerPeriod = 15000; // microseconds
+volatile int stepperTarget = 0;
+volatile int stepperPosition = 0;
 volatile int doorDelta = 0;
-long oldPosition  = -999;
-
+int pumpTimeLeft = 0;
+int newPosition = 0;
 Encoder myEnc(2, 3);
+SerialCommand RasPiCmd;
 
 void setup() {
   pinMode(led, OUTPUT);
@@ -23,12 +26,40 @@ void setup() {
   Timer1.attachInterrupt(windowStepper);
   //Timer1.attachInterrupt(doorStepper);
   Wire.begin();
-  Serial.begin(9600);
+  Serial.begin(112500);
+  //Sensor
   writeI2CRegister8bit(0x21, 6); //reset
+  //Stepper
   pinMode(winDirPin, OUTPUT);
   pinMode(winStepPin, OUTPUT);
   pinMode(doorDirPin, OUTPUT);
   pinMode(doorStepPin, OUTPUT);
+  pinMode(pumpPin, OUTPUT);
+  // Setup callbacks for SerialCommand commands 
+  RasPiCmd.addCommand("pump", togglePump);       // Toggle water pump   
+  RasPiCmd.addCommand("window", setStepperTarget); //set stepper target position
+}
+
+//Toggle pump
+
+void togglePump()    
+{
+  char *arg; 
+  arg = RasPiCmd.next(); 
+  if (arg != NULL) {
+    pumpTimeLeft = atoi(arg);
+  } 
+}
+
+void setStepperTarget()    
+{
+  int target;  
+  char *arg; 
+  arg = RasPiCmd.next(); 
+  if (arg != NULL) {
+    target=atoi(arg);    
+  } 
+  stepperTarget = target;
 }
 
 //Moisture sensor code
@@ -50,21 +81,20 @@ unsigned int readI2CRegister16bit(int addr, int reg) {
 }
 
 //Stepper code
-void windowStepper(void) {
-  digitalWrite(led, !digitalRead(led)); 
-  
+void windowStepper() {
+  int windowDelta = stepperTarget - stepperPosition;;
   if (digitalRead(winStepPin) == 1) {
     digitalWrite(winStepPin, LOW);
   } 
   else if (windowDelta > 0){
     digitalWrite(winDirPin, LOW); 
     digitalWrite(winStepPin, HIGH);
-    windowDelta--;
+    stepperPosition++;
   } 
   else if (windowDelta < 0){
     digitalWrite(winDirPin, HIGH); 
     digitalWrite(winStepPin, HIGH);
-    windowDelta++;  
+    stepperPosition--;  
   }
 }
 
@@ -84,28 +114,54 @@ void doorStepper() {
   }
 }
 
-/*
-unsigned int getWindSpeed(){
-  long newPosition = myEnc.read();    
-  diff = oldPosition - newPosition;
-  return wind_speed;
+
+long int windSpeed(){
+  long int pos = myEnc.read();
+  myEnc.write(0);
+  return pos / 4;
 }
-*/
+
+//int getRevsSec
+
 void loop() {
- int temp = readI2CRegister16bit(0x21, 5);
+  RasPiCmd.readSerial(); 
+
+  if (pumpTimeLeft > 0) {
+    digitalWrite(pumpPin, HIGH);
+    pumpTimeLeft--;
+  } else {
+    digitalWrite(pumpPin, LOW);
+  }
+
+  int temp = readI2CRegister16bit(0x21, 5);
   temp = temp/10;
   int moisture = readI2CRegister16bit(0x21, 0);
-  //int wind_speed = getWindSpeed();
+  
   int light_level = readI2CRegister16bit(0x21, 3); //request light measurement 
-  Serial.print("Temperature: ");
-  Serial.print(temp); 
+  //Serial.print("Pump "); 
+  //digitalWrite(pumpPin, LOW);
+  //Serial.println();
+  //Serial.print(digitalRead(pumpPin));
+  Serial.print("temperature ");  
+  Serial.println(temp); 
   //Serial.print("wind speed: ");
   //Serial.println(wind_speed);
-  Serial.print("moisture: "); //read capacitance register
-  Serial.print(moisture);
-  Serial.print("light level: "); //read capacitance register
-  Serial.println(light_level);   
+  Serial.print("humidity "); //read capacitance register
+  Serial.println(moisture);
+  Serial.print("light "); //read capacitance register
+  Serial.println(light_level);
+  //Serial.print("pulses_sec "); //read capacitance register
+  //Serial.println(pulses_sec);
+  Serial.print("wind ");
+  Serial.println(windSpeed());
+  Serial.print("window ");
+  Serial.println(stepperPosition);
+  Serial.print("pump ");
+  Serial.println(pumpTimeLeft);
+
   delay(1000);
 }
+
+
 
 
