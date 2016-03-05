@@ -14,7 +14,7 @@ Jei klaida, grąžina HTTP klaidą ir JSON:
 
 ## Sensoriai
 
-Grąžina dabartinę sensoriaus _<name>_ reikšmę:
+Grąžina dabartinę sensoriaus _name_ reikšmę:
 
     GET /rpc/<name>/
 
@@ -22,7 +22,7 @@ Reikšmių kitimas laike:
 
     GET /rpc/series/<name>/?start=<ts>&end=<ts>&resolution=<s>
 
-_<ts>_ – UNIX timestampai. _resolution_ – sekundėmis, nurodyti nebūtina (default: 1).
+_ts_ – UNIX timestampai. _resolution_ – sekundėmis, nurodyti nebūtina (default: 1).
 
 Sensorių pavadinimai:
 * _temp_ – oro temperatūra, laipsniais C.
@@ -44,7 +44,7 @@ Sensorių pavadinimai:
 
         GET /rpc/pump/
 
-* Laistyti _<tiek>_ sekundžių:
+* Laistyti _tiek_ sekundžių:
 
         PUT /rpc/pump/?value=<tiek>
 
