@@ -24,7 +24,7 @@ Reikšmių kitimas laike:
 
 _<ts>_ – UNIX timestampai. _resolution_ – sekundėmis, nurodyti nebūtina (default: 1).
 
-Parametrų pavadinimai:
+Sensorių pavadinimai:
 * _temp_ – oro temperatūra, laipsniais C.
 * _humidity_ – dirvos drėgnumas, abstrakčiais vienetais.
 * _wind_ – vėjo greitis, enkoderio tikais per sekundę (600 per apsisukimą)
