@@ -44,7 +44,7 @@ Sensorių pavadinimai:
 
         GET /rpc/pump/
 
-* Laistyti _<sec>_ sekundžių:
+* Laistyti _<tiek>_ sekundžių:
 
-        PUT /rpc/pump/?value=<pos>
+        PUT /rpc/pump/?value=<tiek>
 
