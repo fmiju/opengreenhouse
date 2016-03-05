@@ -1,4 +1,4 @@
-var g_pollingActive = true;
+var g_pollingActive = false;
 var g_pollResponded = true;
 var lastUpdateTime = 0;
 var lastUpdateTimeU = 0;
@@ -78,9 +78,9 @@ function Poll()
 	if(g_pollResponded == true && g_pollingActive == true)
 	{
 		g_pollResponded = false;
-		var textToSend = " ";
-		textToSend = "PollData";
+		var textToSend = "";
 		SendToServer(g_ServerURL, "Poll", textToSend, handlePollResponse);
+
 	}
 	setTimeout(Poll, refreshPeriod);   
 }
