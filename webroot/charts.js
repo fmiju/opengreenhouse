@@ -24,7 +24,7 @@ function fillChartData(chartId, data)
 	
 	MG.data_graphic({
         title: chartId,
-        description: chartId,
+        description: "",
         data: data,
         width: 400,
         height: 200,
@@ -33,9 +33,45 @@ function fillChartData(chartId, data)
 	    x_accessor: 'time',
         y_accessor: 'value'
     });
+}
 
-//	var test = obj.value.value;
+function setWidgetValue(widgetId, value)
+{
+	var widget = document.getElementById(widgetId);
+	if(widget == undefined)
+		return;
 
-	}
+	for(var index in widget.childNodes)
+	{
+		var valueField = widget.childNodes[index];
+		if(valueField == undefined)
+			continue;
+		if(valueField.className == "sensorValue")
+		{
+			valueField.innerHTML = value;
+		}
+	}	
+}
 
-fillChartData("temperatureChart", "exampleData.json");
+function createChart(chartId)
+{
+	var chartElement = document.createElement('div');
+	chartElement.id = chartId;
+	// chartElement.innerHTML = '<img class="chart" src="images/chartPlaceholder.jpeg">';
+	return chartElement;
+}
+
+function createWidget(widgetId, imageSrc)
+{
+	var widget = document.createElement('div');
+	widget.id = widgetId;
+	widget.className = "momentValueWidget";
+	var img = document.createElement('img');
+	img.src = imageSrc;
+	widget.appendChild(img);
+	var valueDiv = document.createElement('div');
+	valueDiv.className = "sensorValue"
+	valueDiv.innerHTML = "??";
+	widget.appendChild(valueDiv);
+	return widget;
+}
