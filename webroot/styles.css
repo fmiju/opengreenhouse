@@ -1,0 +1,78 @@
+.momentValueWidget
+{
+	width: 10%;
+	height: 300;
+	float: right;
+}
+
+.momentValueWidget > img
+{
+	width: 64px;
+	height: 64px;
+	float: left;
+}
+
+.momentValueWidget > .sensorValue
+{
+	float: left;
+}
+
+.PageHeader > h1
+{
+	float: left;
+}
+
+.PageHeader
+{
+	
+}
+
+#plotsContainer
+{
+	float:left;
+	width: 70%;
+}
+
+#plotsContainer > div
+{
+	float:left;
+	width: 50%;
+}
+
+#plotsContainer > div > img
+{
+	width: 100%;
+}
+
+#webCamContainer
+{
+	width: 100%;
+	float:left;
+}
+
+#webCamContainer > img
+{
+	width: 100%;
+	height: 100%;
+}
+
+.SideCollumn
+{
+	float:left;
+	width: 30%;
+}
+
+#Content
+{
+	clear: both;
+}
+
+#Footer
+{
+	clear: both;
+}
+
+#TimeSelections
+{
+	clear: left;
+}
