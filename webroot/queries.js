@@ -80,14 +80,26 @@ function UpdateSensorsList()
 			if(plotsContainer == undefined)
 				return;
 
+			var widgetsContainer = document.getElementById("widgetsContainer");
+			if(widgetsContainer == undefined)
+				return;
+
 			plotsContainer.innerHTML = ""; //delete all charts
 
 			sensorCombobox.innerHTML = ""; //delete all sensor options
 			gSensorsList.length = 0;
 
+			if(xmlHttp.responseText.length == 0)
+			{
+				return;
+			}
+
 			var obj = JSON.parse(xmlHttp.responseText);
 			if(obj.ok != true)
+			{
 				alert("Get sensors list failed");
+				return;
+			}
 			for(var itemKey in obj.value)
 			{
 				var item = obj.value[itemKey];
@@ -104,6 +116,9 @@ function UpdateSensorsList()
 					sensorCombobox.add(option);
 					var chartElement = createChart(sensorStruct.chartId);
 					plotsContainer.appendChild(chartElement);
+
+					var widget = createWidget(sensorStruct.name+"Widget", "images/temperatureIcon.png");
+					widgetsContainer.appendChild(widget);
 				}
 			}
 		}		

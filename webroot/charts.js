@@ -18,3 +18,17 @@ function createChart(chartId)
 	chartElement.innerHTML = '<img class="chart" src="images/chartPlaceholder.jpeg">';
 	return chartElement;
 }
+
+function createWidget(widgetId, imageSrc)
+{
+	var widget = document.createElement('div');
+	widget.id = widgetId;
+	widget.className = "momentValueWidget";
+	var img = document.createElement('img');
+	img.src = imageSrc;
+	widget.appendChild(img);
+	var valueDiv = document.createElement('div');
+	valueDiv.innerHTML = "??";
+	widget.appendChild(valueDiv);
+	return widget;
+}
