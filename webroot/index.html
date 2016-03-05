@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -11,9 +13,9 @@
   <body onload="Initialize()">    
     <div class="PageHeader">
       <h1>Open green house</h1>
-      <div id="widgetsContainer">
-        
-      </div>
+        <div id="widgetsContainer">
+          
+        </div>
       </div>
     </div>
 
@@ -23,11 +25,8 @@
         </div>
         <div id="TimeSelections">
             <b>name:</b>
-             <select id="sensorName" name="sensorName">
-              <option value="temp">Temperature</option>
-              <option value="airHumidity">Air humidity</option>
-              <option value="soilHumidity">Soil humidity</option>
-              <option value="wind">Wind</option>
+            <select id="sensorName" name="sensorName">
+             
             </select> <br>
             <b>Log start:</b>
             <input type="text" id="timeStart" name="timeStart" value="0"><br>
@@ -37,13 +36,17 @@
             <input type="text" id="timeResolution" name="timeResolution" value="1"><br>
             <input type="button" value="Query data" onclick="runQuery()"><br>
         </div>
-        
-      
-
-      <div id="plotsContainer">
-        
-      </div>
     </div>
+    
+	<script src="d3.min.js" charset="utf-8"></script>
+
+	<link href='metrics-graphics-2.8.0/dist/metricsgraphics.css' rel='stylesheet' type='text/css'>
+	<link href='metrics-graphics-2.8.0/examples/css/metricsgraphics-demo.css' rel='stylesheet' type='text/css'>
+	<link href='metrics-graphics-2.8.0/examples/css/highlightjs-default.css' rel='stylesheet' type='text/css'>
+
+	<script src='metrics-graphics-2.8.0/examples/js/lib/highlight.pack.js'></script>
+	<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+	<script src='metrics-graphics-2.8.0/dist/metricsgraphics.min.js'></script>
 
     <div id="Footer">
     </div>

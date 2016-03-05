@@ -6,9 +6,33 @@ function fillChartData(chartId, data)
 
 	obj = JSON.parse(data);
 
-	var test = obj.value.value;
-	test = test.toString()
-	chartElement.innerHTML = test;
+	var time = obj.value.time;
+	var value = obj.value.value;
+
+	var data = [];	
+	var txtData = '[';
+	for(i = 0; i < time.length; i++){
+		text = '{"time": "' + time[i] + '",\n"value": ' + value[i] + '}';
+		txtData += text;
+		if(i < time.length-1) 
+			txtData += ',';
+	}
+
+	txtData += ']';
+//	chartElement.innerHTML = txtData;
+	data = JSON.parse(txtData);
+	
+	MG.data_graphic({
+        title: chartId,
+        description: "",
+        data: data,
+        width: 400,
+        height: 200,
+        right: 40,
+        target: chartElement,
+	    x_accessor: 'time',
+        y_accessor: 'value'
+    });
 }
 
 function setWidgetValue(widgetId, value)
@@ -33,7 +57,7 @@ function createChart(chartId)
 {
 	var chartElement = document.createElement('div');
 	chartElement.id = chartId;
-	chartElement.innerHTML = '<img class="chart" src="images/chartPlaceholder.jpeg">';
+	// chartElement.innerHTML = '<img class="chart" src="images/chartPlaceholder.jpeg">';
 	return chartElement;
 }
 
