@@ -6,10 +6,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="styles.css" rel="stylesheet">
+    <script src="polling.js"></script> 
   </head>
-  <body>    
+  <body onload="Poll()">    
     <div class="PageHeader">
-      <h1>Open GreenHouse</h1>
+      <h1>Open green house</h1>
       <div id="temperatureWidget" class="momentValueWidget">
         <img src="images/temperatureIcon.png">
         <div class="sensorValue">??</div>
@@ -40,6 +41,10 @@
             <input type="text" name="chartResolution"><br>
             <b>Resolution:</b>
             <input type="text" name="chartResolution"><br>
+        </div>
+        <div>
+          Polling active:
+          <input type="checkbox" name="dataPooling" onchange="togglePolling()" checked>
         </div>
       </div>
 

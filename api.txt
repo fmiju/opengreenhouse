@@ -1,0 +1,5 @@
+Jei klaida: {"ok": false, "error": "priežastis"}
+
+Jei ok: {"ok": true, "value": ...}
+
+/rpc/sensor/?name=temp&start=1&end=10&resolution=1

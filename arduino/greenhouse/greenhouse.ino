@@ -49,27 +49,33 @@ void setup() {
  delay(2000);
 }
 
-void loop() {
-  //Serial.print(readI2CRegister16bit(0x21, 0)); //read capacitance register
-  //Serial.print(", ");
-  temp = readI2CRegister16bit(0x21, 5);
-  temp = temp/10;
-  Serial.print("Temperature:");
-  Serial.print(temp); //temperature register
-  Serial.println();
-  Serial.print("Rotating stepper:");
-  Serial.print( temp);
-  Serial.println();
-  rotateStepper(temp);  
+unsigned int getWindSpeed(){
   long newPosition = myEnc.read();
   if (newPosition != oldPosition) {
     oldPosition = newPosition;
-    Serial.println("Position:");
-    Serial.println(newPosition);
-    Serial.println();
   }
+  return newPosition;
+}
 
-  //writeI2CRegister8bit(0x21, 3); //request light measurement 
-  //Serial.println(readI2CRegister16bit(0x21, 4)); //read light register
+void loop() {
+  temp = readI2CRegister16bit(0x21, 5);
+  temp = temp/10;
+  moisture = readI2CRegister16bit(0x21, 0) 
+  wind_speed = getWindSpeed();
+  light_level = writeI2CRegister8bit(0x21, 3); //request light measurement 
+  Serial.print("Temperature: ");
+  Serial.print(temp); 
+  Serial.print("wind speed: ");
+  Serial.println(wind_speed);
+  Serial.print("moisture: "); //read capacitance register
+  Serial.print(moisture);
+  Serial.print("light level: "); //read capacitance register
+  Serial.println(light_level);  
+  Serial.print("window: "); 
+  Serial.print("closed");  
+  rotateStepper(temp); 
+  delay(1000);
+
+
 
 }
