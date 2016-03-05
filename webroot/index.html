@@ -4,8 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="styles.css" rel="stylesheet">
+    <script src="polling.js"></script> 
   </head>
-  <body>    
+  <body onload="Poll()">    
     <div class="PageHeader">
       <h1>Open GreenHouse</h1>
       <div id="temperatureWidget" class="momentValueWidget">
@@ -38,6 +39,10 @@
             <input type="text" name="chartResolution"><br>
             <b>Resolution:</b>
             <input type="text" name="chartResolution"><br>
+        </div>
+        <div>
+          Pooling active:
+          <input type="checkbox" name="dataPooling" onchange="togglePolling()">
         </div>
       </div>
 
