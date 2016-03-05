@@ -6,6 +6,7 @@ import urllib.parse
 import numpy
 import multiprocessing
 import serial
+import time
 
 
 SERIAL_DEVICE = "/dev/ttyACM0"
@@ -47,15 +48,23 @@ class Arduino:
         self.pipe.send((name,) + args)
 
 
+ARDUINO = Arduino()
 
-WEBROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "webroot")
+PROCEDURES = {}
+def procedure(fn):
+    PROCEDURES[fn.__name__] = fn
+    return fn
 
+@procedure
 def sensor_list():
     return [{
         'temp': 'Random temperature'
     }]
 
-def sensor(name, start, end, resolution=1):
+@procedure
+def sensor(name, start, end=None, resolution=1):
+    if end is None:
+        end = time.time()
     start = float(start)
     end = float(end)
     resolution = float(resolution)
@@ -66,9 +75,23 @@ def sensor(name, start, end, resolution=1):
         'value': list(numpy.random.normal(size=len(time))),
     }
 
-PROCEDURES = dict(sensor=sensor, sensor_list=sensor_list)
+@procedure
+def set_window(open):
+    ARDUINO.command("window", int(open))
+    return position
 
-ARDUINO = Arduino()
+@procedure
+def set_door(open):
+    ARDUINO.command("door", int(open))
+    return position
+
+@procedure
+def set_pump(on):
+    ARDUINO.command("pump", int(open))
+    return position
+
+
+WEBROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "webroot")
 
 class Handler(http.server.SimpleHTTPRequestHandler):
     def respond(self, code, value):
@@ -111,7 +134,7 @@ def main():
     os.chdir(WEBROOT)
     httpd = http.server.HTTPServer((HTTP_HOST, HTTP_PORT), Handler)
     print("Serving on http://0.0.0.0:8000")
-    #ARDUINO.start()
+    ARDUINO.start()
     httpd.serve_forever()
 
 

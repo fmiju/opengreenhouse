@@ -16,6 +16,20 @@ URL formatas:
 
 ## Procedūros
 
+Sensorių sąrašas:
+
     sensor_list()
 
-    sensor(name, start, end, resolution=1)
+Gauti sensoriaus parodymų intervale [start,end]:
+
+    sensor(name, start, end=now(), resolution=1)
+
+Atidaryti ir uždaryti langą ir duris (`open` – `true` arba `false`):
+
+    set_window(open)
+
+    set_door(open)
+
+Įjungti ir išjungti pompą (`open` – `true` arba `false`):
+
+    set_pump(on)
