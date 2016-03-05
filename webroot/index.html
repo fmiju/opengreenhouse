@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="styles.css" rel="stylesheet">
+  </head>
+  <body>    
+    <div class="PageHeader">
+      <h1>Open GreenHouse</h1>
+      <div id="temperatureWidget" class="momentValueWidget">
+        <img src="images/temperatureIcon.png">
+        <div class="sensorValue">??</div>
+      </div>
+      <div id="humidityWidget" class="momentValueWidget">
+        <img src="images/humidityIcon.png">
+        <div class="sensorValue">??</div>
+      </div>
+      <div id="soilHumidityWidget" class="momentValueWidget">
+        <img src="images/humidityIcon.png">
+        <div class="sensorValue">??</div>
+      </div>
+      <div id="WindWidget" class="momentValueWidget">
+        <img src="images/windIcon.png">
+        <div class="sensorValue">??</div>
+      </div>
+    </div>
+
+    <div id="Content">
+      <div class="SideCollumn">
+        <div id="webCamContainer">
+          <img src="images/videoPlayer.jpeg">
+        </div>
+        <div id="TimeSelections">
+            <b>Log start:</b>
+            <input type="text" name="chartResolution"><br>
+            <b>Log end:</b>
+            <input type="text" name="chartResolution"><br>
+            <b>Resolution:</b>
+            <input type="text" name="chartResolution"><br>
+        </div>
+      </div>
+
+      <div id="plotsContainer">
+        <div id="temperatureChart">
+          <img class="chart" src="images/chartPlaceholder.jpeg">
+        </div>
+        <div>
+         <img class="chart" src="images/chartPlaceholder.jpeg">
+        </div>
+        <div>
+          <img class="chart" src="images/chartPlaceholder.jpeg">
+        </div>
+        <div>
+         <img class="chart" src="images/chartPlaceholder.jpeg">
+        </div>
+      </div>
+    </div>
+
+    <div id="Footer">
+    </div>
+
+  </body>
+</html>
+
