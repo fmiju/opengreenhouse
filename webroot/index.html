@@ -6,7 +6,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link href="styles.css" rel="stylesheet">
-    <script src="polling.js"></script> 
+    <script src="polling.js"></script>
+    <script src="charts.js"></script>
+    <script src="queries.js"></script>
   </head>
   <body onload="Poll()">    
     <div class="PageHeader">
@@ -35,12 +37,20 @@
           <img src="images/videoPlayer.jpeg">
         </div>
         <div id="TimeSelections">
+            <b>name:</b>
+             <select id="sensorName" name="sensorName">
+              <option value="temp">Temperature</option>
+              <option value="airHumidity">Air humidity</option>
+              <option value="soilHumidity">Soil humidity</option>
+              <option value="wind">Wind</option>
+            </select> <br>
             <b>Log start:</b>
-            <input type="text" name="chartResolution"><br>
+            <input type="text" id="timeStart" name="timeStart" value="0"><br>
             <b>Log end:</b>
-            <input type="text" name="chartResolution"><br>
+            <input type="text" id="timeEnd" name="timeEnd" value="10"><br>
             <b>Resolution:</b>
-            <input type="text" name="chartResolution"><br>
+            <input type="text" id="timeResolution" name="timeResolution" value="1"><br>
+            <input type="button" value="Query data" onclick="runQuery()"><br>
         </div>
         <div>
           Polling active:
@@ -54,13 +64,13 @@
           <img class="chart" src="images/chartPlaceholder.jpeg">
 -->
         </div>
-        <div>
+        <div id="airHumidityChart">
          <img class="chart" src="images/chartPlaceholder.jpeg">
         </div>
-        <div>
+        <div id="soilHumidityChart">
           <img class="chart" src="images/chartPlaceholder.jpeg">
         </div>
-        <div>
+        <div id="windChart">
          <img class="chart" src="images/chartPlaceholder.jpeg">
         </div>
       </div>
