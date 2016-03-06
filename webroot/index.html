@@ -14,10 +14,24 @@
     <div class="PageHeader">
     	<img src="images/header.png" alt="Open green house">
         <div id="widgetsContainer">
-          
+         
         </div>
+		<div id="buttons">
+            <input type="button" id="openWindow1Button" value="Open window1" onclick="openWindow1()"><br>
+            <input type="button" id="closeWindow1Button" value="Open window2" onclick="closeWindow1"><br>
+            <input type="button" id="openDoorButton" value="Open door" onclick="opeanDoor()"><br>
+             <input type="text" id="wateringTime" name="wateringTime" value="0"><br>
+			 <input type="button" value="Water" onclick="water()"><br>
+<!--
+		    <input type="range" name="window1State" min="0" max="100" onchange="updateWindow()">
+		    <label id="window1StateText">
+			<input id="wateringSlider" type="range" name="wateringTime" min="0" max="100" onchange="updateWateringTime()">
+		   	 <label id="wateringSliderText">
+-->
+		</div>
       </div>
     </div>
+
 
     <div id="Content">
         <div id="webCamContainer">

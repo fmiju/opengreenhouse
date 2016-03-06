@@ -22,6 +22,23 @@ function queryData(name, start, end, resolution, callback)
     return xmlHttp.responseText;
 }
 
+function queryWindow(name, callback)
+{
+	var xmlHttp = null;
+	xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "GET", g_ServerURL+'/rpc/window/', true);
+	xmlHttp.send("");	
+	xmlHttp.onreadystatechange = function(e)
+	{
+		if ( xmlHttp.readyState === 4 && xmlHttp.state == 200) 
+		{		
+			if(callback)
+				callback(xmlHttp.responseText);
+		}		
+	}
+}
+
+
 function runQuery()
 {	
 	var name;
@@ -54,7 +71,6 @@ function runQuery()
 		{
 			queryData(gSensorsList[index].name, timeStart, timeEnd, timeResolution, 
 				function(data){ fillChartData(gSensorsList[index].chartId, data) 
-			
 				values = JSON.parse(data);
 				numbers = values.value.value;
 				var lastValue = numbers[numbers.length-1];
@@ -163,3 +179,106 @@ function continuousUpdate()
 	}
 	setTimeout(continuousUpdate, 500);
 }
+
+function updateButton(buttonId, data)
+{	
+	obj = JSON.parse(data);
+	if(obj.ok != true)
+	{
+		alert("Failed to get state: "+buttonId);
+		return;
+	}
+	if(obj.value == null) return;
+
+	var button = document.getElementById(buttonId);
+	if(obj.value > 50)
+	{
+		button.value="Close window";
+	}
+	else 
+	{
+		button.value="Open window";	
+	}
+}
+
+function updateWindowButtons(){
+	queryWindow(windowId, function(data){
+		updateButton(buttonId, data);
+	});
+	queryWindow(windowId, function(data){
+	updateButton(buttonId, data);
+});
+	queryDoor(windowId, function(data){
+		updateButton(buttonId, data);
+	});
+	
+	setTimeout(updateButtons, 1000);
+}
+
+function openDoor(){
+	var xmlHttp = null;
+	xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "PUT", g_ServerURL+'/rpc/window/?value='+100, true);
+	xmlHttp.send("");	
+	xmlHttp.onreadystatechange = function(e)
+	{
+		if ( xmlHttp.readyState === 4 && xmlHttp.state == 200) 
+		{		
+			if(callback)
+				callback(xmlHttp.responseText);
+		}		
+	}
+
+}
+function openWindow1(){
+
+}
+
+
+function updateWateringTime(){
+	var slider = document.getElementById("wateringSlider");
+	
+	var command = "rpc/pump/?value="+slider.value;
+
+	var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open( "PUT", g_ServerURL+'/'+command, true);
+    xmlHttp.send("");	
+	xmlHttp.onreadystatechange = function(e)
+	{
+		if ( xmlHttp.readyState === 4 && xmlHttp.status == 200)
+		
+		var waterLevel = slider.value;
+
+		while(){
+			var xmlHttp = null;
+			xmlHttp = new XMLHttpRequest();
+			xmlHttp.open( "GET", g_ServerURL+'/rpc/pump/', true);
+			xmlHttp.send("");	
+			xmlHttp.onreadystatechange = function(e) 
+			{
+				if ( xmlHttp.readyState === 4 && xmlHttp.status === 200) 
+				{		
+					obj = JSON.parse(xmlHttp.responseText);
+				}		
+			}
+			return xmlHttp.responseText;
+			
+		}
+	}
+}
+
+function addProgressBar()
+{		
+	var buttonContainer = document.getElementById("buttons");
+	var element = document.getElementById("wateringSlider");
+	buttonContainer.removeChild(element);
+
+	var progressBar = document.createElement('div');
+	progressBar.id = "progressBarContainer";
+	progressBar.innerHTML = '<div id="progress-bar" role="progressbar" aria-valuenow="' + slider.value + '" aria-valuemin="0" aria-valuemax="100" style="width:70%"> ' + slider.value + '</div>';
+
+	buttonContainer.appendChild(progressBar);
+}
+
+
